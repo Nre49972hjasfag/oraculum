@@ -1,4 +1,4 @@
-🧠 System Invalidation & Error Management Architecture
+System Invalidation & Error Management Architecture
 
 To keep the forecaster from hallucinating or generating static predictions, 
 it validates its performance using a programmatic Post-Mortem Evaluation Layer:
