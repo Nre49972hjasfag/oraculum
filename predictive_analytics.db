@@ -1,0 +1,49 @@
+sql-- 1. Реестр контролируемых источников данных
+CREATE TABLE source_metadata (
+    source_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_name TEXT NOT NULL,         -- Например: 'Polymarket API', 'SEC RSS/Federal Register'
+    source_type TEXT NOT NULL,         -- 'Prediction Market' или 'Regulatory News'
+    reliability_rating REAL DEFAULT 1.0
+);
+
+-- 2. Сырые слепки данных (Лог парсинга)
+CREATE TABLE raw_data_records (
+    record_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_id INTEGER,
+    event_code TEXT NOT NULL,          -- Уникальный идентификатор события
+    raw_payload TEXT NOT NULL,         -- JSON-строка с сырым ответом API
+    fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(source_id) REFERENCES source_metadata(source_id)
+);
+
+-- 3. Нормализованные показатели (Диапазон 0-100)
+CREATE TABLE normalized_indicators (
+    indicator_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_code TEXT NOT NULL,
+    metric_name TEXT NOT NULL,         -- 'polymarket_probability', 'sec_sentiment_score'
+    normalized_value REAL NOT NULL,    -- Значение строго от 0.0 до 100.0
+    metric_weight REAL NOT NULL,       -- Вес в общей модели (Сумма всех весов = 1.0)
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 4. Итоговые математические прогнозы
+CREATE TABLE predictions (
+    prediction_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_code TEXT NOT NULL,
+    target_object TEXT NOT NULL,       -- 'Solana Spot ETF Approval'
+    final_verdict TEXT NOT NULL,       -- 'Highly Probable', 'Unlikely' и т.д.
+    confidence_score REAL NOT NULL,    -- Итоговая вероятность в %
+    risk_factor REAL NOT NULL,         -- Коэффициент риска в % (100 - confidence)
+    error_trigger_condition TEXT NOT,  -- Математическое условие, при котором прогноз признается ложным
+    calculated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 5. История обновлений и аудит точности
+CREATE TABLE prediction_audit_history (
+    audit_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    prediction_id INTEGER,
+    previous_score REAL,
+    new_score REAL,
+    change_reason TEXT,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
