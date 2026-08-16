@@ -1,0 +1,29 @@
+[
+  {
+    "event_code": "CRYPTO-SOL-ETF-2026",
+    "target_object": "Solana Spot ETF Approval (USA)",
+    "calculated_at": "2026-08-16 14:39:12",
+    "final_verdict": "Highly Probable",
+    "confidence_score_percentage": 73.15,
+    "risk_factor_percentage": 26.85,
+    "current_live_metrics": {
+      "polymarket_probability": 56.0,
+      "sec_regulatory_sentiment": 65.0,
+      "binance_24h_volume_usd": 389450120.0,
+      "binance_momentum_score_0_100": 94.5
+    },
+    "prediction_trend_history": [
+      {
+        "audit_id": 1,
+        "previous_score": 60.95,
+        "new_score": 73.15,
+        "change_reason": "Live Binance API Update: Active trade volume momentum surge (+45% above 30d baseline).",
+        "timestamp": "2026-08-16 14:39:12"
+      }
+    ],
+    "error_trigger_conditions": {
+      "time_expiration": "Calendar expiration past 2026-12-31 without SEC decision.",
+      "regulatory_rejection": "Official final Notice of Disapproval published by SEC."
+    }
+  }
+]
